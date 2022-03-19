@@ -1,10 +1,11 @@
-package apiserver
+package main
 
 import (
 	"bufio"
 	"github.com/azamt18/post-service-grpc-api-gateway/apiserver"
 	"github.com/azamt18/post-service-grpc-api-gateway/db"
-	posts_loader_service "github.com/azamt18/post-service-grpc-api-gateway/services/inner/posts-loader-service"
+	postLoader "github.com/azamt18/post-service-grpc-api-gateway/services/post/external/loader"
+	postLoaderGrpcClient "github.com/azamt18/post-service-grpc-api-gateway/services/post/inner/loader/client"
 	"log"
 	"os"
 	"strings"
@@ -40,23 +41,22 @@ const (
 
 	mongoConnectionString = "MONGO_CONNECTION_STRING"
 	mongoDatabaseName     = "MONGO_DATABASE_NAME"
-
-	postsLoaderServiceGrpcHost = "POSTS_LOADER_GRPC_SERVICE_HOST"
 )
 
 func main() {
 	database := createDatabase()
 	defer database.Disconnect()
 
-	postsLoaderService := createPostsLoaderService()
+	postLoaderGrpcClient := postLoaderGrpcClient.NewClient()
+	postLoaderService := postLoader.NewPostsLoaderService(postLoaderGrpcClient)
 
 	webApiChan := make(chan int, 1)
-	go startWebApi(database, postsLoaderService, webApiChan)
+	go startWebApi(database, postLoaderService, webApiChan)
 
 	<-webApiChan
 }
 
-func startWebApi(database db.Database, postsLoaderService posts_loader_service.PostsLoaderService, channel chan int) {
+func startWebApi(database db.Database, postsLoaderService postLoader.PostsLoaderService, channel chan int) {
 	// init and start server
 	server := apiserver.New(os.Getenv(apiServerBindAddr), database, postsLoaderService)
 	err := server.Start()
@@ -65,12 +65,6 @@ func startWebApi(database db.Database, postsLoaderService posts_loader_service.P
 	}
 
 	channel <- 0
-}
-
-func createPostsLoaderService() posts_loader_service.PostsLoaderService {
-	host := os.Getenv(postsLoaderServiceGrpcHost)
-
-	return posts_loader_service.NewPostsLoaderService(host)
 }
 
 func createDatabase() db.Database {

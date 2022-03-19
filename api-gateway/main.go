@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
-	postOperationsSvcV1 "github.com/azamt18/post-service-grpc-api-gateway/services/post/operations/api/goclient/v1"
 	"google.golang.org/grpc"
 	//"github.com/golang/protobuf/protoc-gen-go/grpc"
 	"log"
@@ -14,14 +12,14 @@ const (
 	postOperationsSvc = "users:9090"
 )
 
-func newPostOperationsSvcClient() (postOperationsSvcV1.PostServiceClient, error) {
-	conn, err := grpc.DialContext(context.TODO(), postOperationsSvc, grpc.WithInsecure())
-	if err != nil {
-		return nil, fmt.Errorf("users client: %w", err)
-	}
-
-	return postOperationsSvcV1.NewPostServiceClient(conn), nil
-}
+//func newPostOperationsSvcClient() (v1.PostServiceClient, error) {
+//conn, err := grpc.DialContext(context.TODO(), postOperationsSvc, grpc.WithInsecure())
+//if err != nil {
+//	return nil, fmt.Errorf("users client: %w", err)
+//}
+//
+//return v1.NewPostServiceClient(conn), nil
+//}
 
 func logger(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	log.Printf("method %q called\n", info.FullMethod)
@@ -36,10 +34,10 @@ func main() {
 	log.Printf("APIGW service starting on %s", listenAddress)
 
 	// connect to post operations svc
-	operationsSvcClient, err := newPostOperationsSvcClient()
-	if err != nil {
-		panic(err)
-	}
+	//operationsSvcClient, err := newPostOperationsSvcClient()
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	//lis, err := net.Listen("tcp", listenAddress)
 	//if err != nil {

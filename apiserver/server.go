@@ -3,7 +3,7 @@ package apiserver
 import (
 	"github.com/azamt18/post-service-grpc-api-gateway/apiserver/middlewares"
 	"github.com/azamt18/post-service-grpc-api-gateway/db"
-	posts_loader_service "github.com/azamt18/post-service-grpc-api-gateway/services/inner/posts-loader-service"
+	postLoader "github.com/azamt18/post-service-grpc-api-gateway/services/post/external/loader"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,10 +11,10 @@ type apiServer struct {
 	bindAddr           string
 	server             *gin.Engine
 	database           db.Database
-	postsLoaderService posts_loader_service.PostsLoaderService
+	postsLoaderService postLoader.PostsLoaderService
 }
 
-func New(bindAddr string, database db.Database, postsLoaderService posts_loader_service.PostsLoaderService) *apiServer {
+func New(bindAddr string, database db.Database, postsLoaderService postLoader.PostsLoaderService) *apiServer {
 	apiServer := &apiServer{
 		bindAddr:           bindAddr,
 		server:             gin.Default(),

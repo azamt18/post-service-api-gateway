@@ -1,8 +1,9 @@
 package controller
 
 import (
+	"github.com/azamt18/post-service-grpc-api-gateway/apiserver/viewmodels"
 	"github.com/azamt18/post-service-grpc-api-gateway/db"
-	posts_loader_service "github.com/azamt18/post-service-grpc-api-gateway/services/inner/posts-loader-service"
+	posts_loader_service "github.com/azamt18/post-service-grpc-api-gateway/services/post/external/loader"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -17,9 +18,19 @@ type postController struct {
 }
 
 func (p *postController) LoadPosts(context *gin.Context) {
-	response, _ := p.postsLoaderService.LoadPosts()
+	success, count, err := p.postsLoaderService.LoadPosts()
 
-	context.JSON(http.StatusOK, response.LoadedPostsCount)
+	response := viewmodels.LoadPostsViewModel{
+		Success: success,
+		Count:   count,
+		Error:   err,
+	}
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, response)
+	}
+
+	context.JSON(http.StatusOK, response)
 }
 
 func NewPostController(db db.Database, postsLoaderService posts_loader_service.PostsLoaderService) PostController {

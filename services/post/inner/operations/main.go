@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	pb "github.com/azamt18/post-service-grpc-api-gateway/services/post/operations/api/goclient/v1"
+	pb "github.com/azamt18/post-service-grpc-api-gateway/services/post/inner/operations/api/goclient/v1"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -144,7 +144,7 @@ func (s *postOperationsService) ListPosts(request *pb.ListPostsRequest, stream p
 	if error != nil {
 		return status.Errorf(
 			codes.Internal,
-			fmt.Sprintf("Unknown internal error: %v", error),
+			fmt.Sprintf("Unknown internals error: %v", error),
 		)
 	}
 
@@ -177,7 +177,7 @@ func (s *postOperationsService) ListPosts(request *pb.ListPostsRequest, stream p
 	if err := cursor.Err(); err != nil {
 		return status.Errorf(
 			codes.Internal,
-			fmt.Sprintf("Unknown internal error: %v", error),
+			fmt.Sprintf("Unknown internals error: %v", error),
 		)
 	}
 
