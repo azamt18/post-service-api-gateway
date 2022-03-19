@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package smpl.post.loader.v1;
+
+option go_package = "github.com/azamt18/post-service-grpc-api-gateway/services/post/loader/api/v1";
+
+message LoadPostsRequest {
+  int64 page_number = 1;
+}
+
+message LoadPostsResponse {
+  bool success = 1;
+  int64 loaded_posts_count = 2;
+}
+
+service LoadPostsService {
+  rpc LoadPosts(LoadPostsRequest) returns (LoadPostsResponse) {};
+}

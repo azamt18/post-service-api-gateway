@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package smpl.post.operations.v1;
+
+option go_package = "github.com/azamt18/post-service-grpc-api-gateway/services/post/operations/api/v1";
+
+message Post {
+  string id = 1;
+  string user_id = 2;
+  string title = 3;
+  string body = 4;
+}
+
+message ReadPostRequest {
+  string post_id = 1;
+}
+
+message ReadPostResponse {
+  Post Post = 1;
+}
+
+message UpdatePostRequest {
+  Post Post = 1;
+}
+
+message UpdatePostResponse {
+  Post Post = 1;
+}
+
+message DeletePostRequest {
+  string post_id = 1;
+}
+
+message DeletePostResponse {
+  string post_id = 1;
+}
+
+message ListPostsRequest {
+
+}
+
+message ListPostsResponse {
+  Post Post = 1;
+}
+
+
+service PostService {
+  rpc ReadPost (ReadPostRequest) returns (ReadPostResponse) {}; // if not found returns NOT_FOUND response
+  rpc UpdatePost (UpdatePostRequest) returns (UpdatePostResponse) {}; // if not found returns NOT_FOUND response
+  rpc DeletePost (DeletePostRequest) returns (DeletePostResponse) {}; // if not found returns NOT_FOUND response
+  rpc ListPosts (ListPostsRequest) returns (stream ListPostsResponse) {};
+}

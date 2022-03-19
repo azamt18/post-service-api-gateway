@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package smpl.api.post.loader.v1;
+
+option go_package = "github.com/azamt18/post-service-grpc-api-gateway/services/post/loader/api/v1";
