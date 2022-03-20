@@ -10,7 +10,7 @@ message Post {
 }
 
 message ReadPostRequest {
-  string Post_id = 1;
+  int64 PostId = 1;
 }
 
 message ReadPostResponse {
@@ -18,7 +18,8 @@ message ReadPostResponse {
 }
 
 message UpdatePostRequest {
-  Post Post = 1;
+  int64 PostId = 1;
+  Post Post = 2;
 }
 
 message UpdatePostResponse {
@@ -26,15 +27,16 @@ message UpdatePostResponse {
 }
 
 message DeletePostRequest {
-  string Post_id = 1;
+  int64 PostId = 1;
 }
 
 message DeletePostResponse {
-  string Post_id = 1;
+  int64 PostId = 1;
 }
 
 message ListPostsRequest {
-
+  int64 Limit = 1;
+  int64 Skip = 2;
 }
 
 message ListPostsResponse {

@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -19,7 +20,14 @@ type server struct {
 func (s server) ListPosts(request *post_operations.ListPostsRequest, stream post_operations.PostOperationsService_ListPostsServer) error {
 	fmt.Println("Get posts request...")
 
-	cursor, err := s.db.PostsCollection().Find(context.Background(), primitive.D{{}}) // D - used because of the order of the elements matters
+	limit := request.GetLimit()
+	skip := request.GetSkip()
+
+	opts := options.FindOptions{}
+	opts.SetLimit(limit)
+	opts.SetSkip(skip)
+
+	cursor, err := s.db.PostsCollection().Find(context.Background(), primitive.D{{}}, &opts) // D - used because of the order of the elements matters
 	if err != nil {
 		return status.Errorf(
 			codes.Internal,
@@ -67,7 +75,7 @@ func (s server) ReadPost(ctx context.Context, request *post_operations.ReadPostR
 	fmt.Println("Read post request...")
 
 	postId := request.GetPostId()
-	oid, err := primitive.ObjectIDFromHex(postId)
+	oid, err := primitive.ObjectIDFromHex(string(postId))
 	if err != nil {
 		return nil, status.Errorf(
 			codes.InvalidArgument,
@@ -142,7 +150,7 @@ func (s server) UpdatePost(ctx context.Context, request *post_operations.UpdateP
 
 func (s server) DeletePost(ctx context.Context, request *post_operations.DeletePostRequest) (*post_operations.DeletePostResponse, error) {
 	fmt.Println("Delete blog request...")
-	oid, error := primitive.ObjectIDFromHex(request.GetPostId())
+	oid, error := primitive.ObjectIDFromHex(string(request.GetPostId()))
 	if error != nil {
 		return nil, status.Errorf(
 			codes.InvalidArgument,
@@ -181,7 +189,7 @@ func dataToPostPb(data *PostItem) *post_operations.Post {
 }
 
 type PostItem struct {
-	Id     int64  `json:"_id,omitempty" bson:"_id,omitempty"`
+	Id     int64  `json:"id,omitempty" bson:"_id,omitempty"`
 	UserId int64  `bson:"user_id"`
 	Title  string `bson:"title"`
 	Body   string `bson:"body"`

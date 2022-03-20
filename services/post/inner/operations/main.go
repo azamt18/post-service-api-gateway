@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	postOperationsGrpcServerAddress = "POST_OPERATIONS_GRPC_SERVER_ADDRESS"
+	postOperationsGrpcServerAddress = "POST_OPERATIONS_GRPC_SERVICE_HOST"
 )
 
 func initEnvVariables() {

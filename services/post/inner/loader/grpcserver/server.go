@@ -31,8 +31,6 @@ type Post struct {
 func (s server) LoadPosts(ctx context.Context, request *post_loader.LoadPostsRequest) (*post_loader.LoadPostsResponse, error) {
 	fmt.Println("Load posts request...")
 
-	//todo implement async downloading via go routines
-
 	// make an API request to load posts
 	params := url.Values{}
 	params.Add("page", strconv.Itoa(int(request.GetPageNumber())))

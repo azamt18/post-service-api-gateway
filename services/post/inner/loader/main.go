@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"github.com/azamt18/post-service-grpc-api-gateway/services/post/inner/loader/grpcserver"
 	post_loader_grpc_server "github.com/azamt18/post-service-grpc-api-gateway/services/post/inner/loader/internals/protobuff/post.loader.v1"
 	"google.golang.org/grpc"
@@ -69,4 +70,13 @@ func startGRPCServer(channel chan int) {
 	}
 
 	channel <- 0
+}
+
+func logger(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	log.Printf("method %q called\n", info.FullMethod)
+	resp, err := handler(ctx, req)
+	if err != nil {
+		log.Printf("method %q failed: %s\n", info.FullMethod, err)
+	}
+	return resp, err
 }

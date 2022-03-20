@@ -51,7 +51,7 @@ func main() {
 	postLoaderService := post_loader_grpc_client.NewPostsLoaderService(postLoaderGrpcClient)
 
 	postOperationsGrpcClient := post_operations_grpc_client.NewClient()
-	postOperationsService := post_operations_grpc_client.NewPostsLoaderService(postOperationsGrpcClient)
+	postOperationsService := post_operations_grpc_client.NewPostOperationsService(postOperationsGrpcClient)
 
 	webApiChan := make(chan int, 1)
 	go startWebApi(database, postLoaderService, postOperationsService, webApiChan)
