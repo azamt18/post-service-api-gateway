@@ -2,9 +2,7 @@ syntax = "proto3";
 package post.loader.v1;
 option go_package = "post.loader.v1";
 
-message LoadPostsRequest {
-  int64 page_number = 1;
-}
+message LoadPostsRequest {}
 
 message LoadPostsResponse {
   bool success = 1;
