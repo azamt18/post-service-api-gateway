@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"github.com/azamt18/post-service-grpc-api-gateway/apiserver"
 	"github.com/azamt18/post-service-grpc-api-gateway/db"
-	postLoader "github.com/azamt18/post-service-grpc-api-gateway/services/post/external/loader"
-	postLoaderGrpcClient "github.com/azamt18/post-service-grpc-api-gateway/services/post/inner/loader/client"
+	post_loader_grpc_client "github.com/azamt18/post-service-grpc-api-gateway/services/post/external/loader"
+	post_operations_grpc_client "github.com/azamt18/post-service-grpc-api-gateway/services/post/external/operations"
 	"log"
 	"os"
 	"strings"
@@ -47,18 +47,21 @@ func main() {
 	database := createDatabase()
 	defer database.Disconnect()
 
-	postLoaderGrpcClient := postLoaderGrpcClient.NewClient()
-	postLoaderService := postLoader.NewPostsLoaderService(postLoaderGrpcClient)
+	postLoaderGrpcClient := post_loader_grpc_client.NewClient()
+	postLoaderService := post_loader_grpc_client.NewPostsLoaderService(postLoaderGrpcClient)
+
+	postOperationsGrpcClient := post_operations_grpc_client.NewClient()
+	postOperationsService := post_operations_grpc_client.NewPostsLoaderService(postOperationsGrpcClient)
 
 	webApiChan := make(chan int, 1)
-	go startWebApi(database, postLoaderService, webApiChan)
+	go startWebApi(database, postLoaderService, postOperationsService, webApiChan)
 
 	<-webApiChan
 }
 
-func startWebApi(database db.Database, postsLoaderService postLoader.PostsLoaderService, channel chan int) {
+func startWebApi(database db.Database, postsLoaderService post_loader_grpc_client.PostsLoaderService, postOperationsService post_operations_grpc_client.PostOperationsService, channel chan int) {
 	// init and start server
-	server := apiserver.New(os.Getenv(apiServerBindAddr), database, postsLoaderService)
+	server := apiserver.New(os.Getenv(apiServerBindAddr), database, postsLoaderService, postOperationsService)
 	err := server.Start()
 	if err != nil {
 		log.Fatal(err)

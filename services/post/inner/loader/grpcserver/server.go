@@ -22,14 +22,16 @@ type server struct {
 var response []Post
 
 type Post struct {
-	Id     primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	UserId int                `json:"user_id,omitempty"`
-	Title  string             `json:"title,omitempty"`
-	Body   string             `json:"body,omitempty"`
+	PostId int64  `json:"id,omitempty" bson:"_id,omitempty"`
+	UserId int64  `json:"user_id,omitempty"`
+	Title  string `json:"title,omitempty"`
+	Body   string `json:"body,omitempty"`
 }
 
 func (s server) LoadPosts(ctx context.Context, request *post_loader.LoadPostsRequest) (*post_loader.LoadPostsResponse, error) {
 	fmt.Println("Load posts request...")
+
+	//todo implement async downloading via go routines
 
 	// make an API request to load posts
 	params := url.Values{}
@@ -60,7 +62,7 @@ func (s server) LoadPosts(ctx context.Context, request *post_loader.LoadPostsReq
 	for i, post := range response {
 		fmt.Printf("%v) Post title: %v\n", i, post.Title)
 		postObject := Post{
-			Id:     post.Id,
+			PostId: post.PostId,
 			UserId: post.UserId,
 			Title:  post.Title,
 			Body:   post.Body,

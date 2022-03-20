@@ -1,4 +1,4 @@
-package post_loader
+package loader
 
 import (
 	post_loader_grpc_server "github.com/azamt18/post-service-grpc-api-gateway/services/post/inner/loader/internals/protobuff/post.loader.v1"

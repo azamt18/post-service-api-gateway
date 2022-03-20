@@ -30,7 +30,7 @@ package main
 //	}
 //
 //	post := &pb.Post{
-//		Id:     res.GetPost().GetId(),
+//		PostId:     res.GetPost().GetId(),
 //		UserId: res.GetPost().GetUserId(),
 //		Title:  res.GetPost().GetTitle(),
 //		Body:   res.GetPost().GetBody(),
@@ -45,7 +45,7 @@ package main
 //
 //func (u *postOperationsService) UpdatePost(ctx context.Context, request *pb.UpdatePostRequest) (*pb.UpdatePostResponse, error) {
 //	newPost := &pb.Post{
-//		Id:     request.GetPost().GetId(),
+//		PostId:     request.GetPost().GetId(),
 //		UserId: request.GetPost().GetUserId(),
 //		Title:  request.GetPost().GetTitle(),
 //		Body:   request.GetPost().GetBody(),

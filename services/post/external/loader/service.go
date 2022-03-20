@@ -16,7 +16,7 @@ type postsLoaderService struct {
 func (p postsLoaderService) LoadPosts() (bool, int64, error) {
 
 	res, err := p.postLoaderGrpcClient.LoadPosts(context.TODO(), &post_loader_grpc_client.LoadPostsRequest{
-		PageNumber: 1, //todo remove page number -> make loading all
+		PageNumber: 1, //todo remove page number -> implement loading all
 	})
 	if err != nil {
 		return false, 0, err
